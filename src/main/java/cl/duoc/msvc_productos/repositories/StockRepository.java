@@ -13,7 +13,9 @@ import cl.duoc.msvc_productos.model.interfaces.StockInterface;
 
 
 public interface StockRepository extends JpaRepository<Stock,ClaveCompStock>{
-    
+
+    // Consulta con query nativa, con esto no se puede ocupar DTO, tiene que ser una interfaz
+
     @Query(value = """
     SELECT s.id_producto as idProducto, 
             s.id_bodega as idBodega, 

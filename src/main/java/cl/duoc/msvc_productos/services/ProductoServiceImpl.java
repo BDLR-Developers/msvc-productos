@@ -34,8 +34,10 @@ public class ProductoServiceImpl implements ProductoService{
         Date today = new Date(System.currentTimeMillis());
         prod.setNombreProducto(prod.getNombreProducto());
         prod.setRutUsuario(prod.getRutUsuario());
+        prod.setCodigoBarra(prod.getCodigoBarra());
+        prod.setDescripcion(prod.getDescripcion());
         prod.setFechaCreacion(today);
-        prod.setFechaActualizacion(null);
+        prod.setFechaActualizacion(today);
         return repository.save(prod);
     }
 
