@@ -3,10 +3,11 @@ package cl.duoc.msvc_productos.services;
 import java.util.Optional;
 
 import cl.duoc.msvc_productos.model.Stock;
+import cl.duoc.msvc_productos.model.interfaces.StockInterface;
 
 public interface StockService {
-    
-    Optional<Stock> findById(Integer idProd, Integer idBodega, 
+
+    Optional<StockInterface> findById(Integer idProd, Integer idBodega, 
         Integer periodo);
 
     Stock save(Stock stock);

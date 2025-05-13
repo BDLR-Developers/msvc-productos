@@ -2,26 +2,33 @@ package cl.duoc.msvc_productos.services;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cl.duoc.msvc_productos.model.Stock;
 import cl.duoc.msvc_productos.model.claves.ClaveCompStock;
+import cl.duoc.msvc_productos.model.interfaces.StockInterface;
 import cl.duoc.msvc_productos.repositories.StockRepository;
 
+@Service
 public class StockServiceImpl implements StockService{
 
     @Autowired
     private StockRepository repository;
 
-    @Autowired
-    private ClaveCompStock clave;
+    
+    private static final Logger logger = LoggerFactory.getLogger(StockServiceImpl.class);
 
     @Override
-    public Optional<Stock> findById(Integer idProd, Integer idBodega, Integer periodo) {
+    public Optional<StockInterface> findById(Integer idProd, Integer idBodega, Integer periodo) {
+        ClaveCompStock clave = new ClaveCompStock();
         clave.setIdProducto(idProd);
-        clave.setIdProducto(idBodega);
+        clave.setIdBodega(idBodega);
         clave.setPeriodo(periodo);
-        return repository.findById(clave);
+        logger.info("Buscando stock con producto={},bodega={}, periodo={}", idProd,idBodega, periodo);
+        return repository.consultarByIdProductoAndIdBodegaAndPeriodo(idProd, idBodega, periodo);
     }
 
     @Override
@@ -31,6 +38,7 @@ public class StockServiceImpl implements StockService{
 
     @Override
     public Optional<Stock> update(Integer idProd, Integer idBodega, Integer periodo, Stock stock) {
+        ClaveCompStock clave = new ClaveCompStock();
         clave.setIdProducto(idProd);
         clave.setIdProducto(idBodega);
         clave.setPeriodo(periodo);
@@ -50,6 +58,7 @@ public class StockServiceImpl implements StockService{
 
     @Override
     public Optional<Stock> delete(Integer idProd, Integer idBodega, Integer periodo) {
+        ClaveCompStock clave = new ClaveCompStock();
         clave.setIdProducto(idProd);
         clave.setIdProducto(idBodega);
         clave.setPeriodo(periodo);

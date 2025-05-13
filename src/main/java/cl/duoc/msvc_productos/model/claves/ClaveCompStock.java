@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class ClaveCompStock implements Serializable{
 
-    private Integer idProducto;
+    
     private Integer idBodega;
+    private Integer idProducto;
     private Integer periodo;
 }

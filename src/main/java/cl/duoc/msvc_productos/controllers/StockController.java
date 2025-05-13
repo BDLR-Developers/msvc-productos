@@ -2,6 +2,8 @@ package cl.duoc.msvc_productos.controllers;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msvc_productos.model.Stock;
+import cl.duoc.msvc_productos.model.interfaces.StockInterface;
 import cl.duoc.msvc_productos.services.StockService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,9 +28,13 @@ public class StockController {
     @Autowired
     private StockService service;
 
+    private static final Logger logger = LoggerFactory.getLogger(StockController.class);
+
     @GetMapping
-    public ResponseEntity<?> consultarStock(@RequestParam Integer idProducto, @RequestParam Integer idBodega, @RequestParam Integer periodo) {
-        Optional<Stock> stockOptional = service.findById(idProducto, idBodega, periodo);
+    public ResponseEntity<?> consultarStock(@RequestParam(name = "idProducto") Integer idProducto, @RequestParam (name = "idBodega")
+    Integer idBodega, @RequestParam (name = "periodo") Integer periodo) {
+        logger.info("idProducto "+idProducto);
+        Optional<StockInterface> stockOptional = service.findById(idProducto, idBodega, periodo);
         if (stockOptional.isPresent()) {
             return ResponseEntity.ok(stockOptional.orElseThrow());
         }
@@ -50,7 +57,7 @@ public class StockController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("path/{id}")
+    @DeleteMapping
     public ResponseEntity<?> borrarStock(@RequestParam Integer idProducto, @RequestParam Integer idBodega, 
     @RequestParam Integer periodo, @RequestBody Stock stock) {
         Optional<Stock> stockOptional = service.delete(idProducto, idBodega, periodo);

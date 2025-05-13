@@ -4,10 +4,12 @@ import java.sql.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cl.duoc.msvc_productos.model.Producto;
 import cl.duoc.msvc_productos.repositories.ProductoRepository;
 
+@Service
 public class ProductoServiceImpl implements ProductoService{
 
     @Autowired
