@@ -1,5 +1,7 @@
 package cl.duoc.msvc_productos.model;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -17,4 +19,11 @@ public class Producto {
     @Id
     private Integer idProducto;
     private String nombreProducto;
+    private String descripcion;
+    private String codigoBarra;
+    private Integer precio;
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
+    private Integer rutUsuario;
+
 }
