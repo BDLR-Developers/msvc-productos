@@ -47,7 +47,6 @@ public class ProductoServiceImpl implements ProductoService{
         Date today = new Date(System.currentTimeMillis());
         if (productoOptional.isPresent()) {
             Producto productoDb = productoOptional.orElseThrow();
-            
             productoDb.setIdProducto(producto.getIdProducto());
             productoDb.setNombreProducto(producto.getNombreProducto());
             productoDb.setRutUsuario(producto.getRutUsuario());

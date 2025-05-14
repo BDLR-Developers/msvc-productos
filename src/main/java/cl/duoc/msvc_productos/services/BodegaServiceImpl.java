@@ -31,6 +31,13 @@ public class BodegaServiceImpl implements BodegaService{
 
     @Override
     public Bodega guardar(Bodega bodega) {
+        Date today = new Date(System.currentTimeMillis());
+        bodega.setNombreBodega(bodega.getNombreBodega());
+        bodega.setIdUsuario(bodega.getIdUsuario());
+        bodega.setIdSucursal(1);
+        bodega.setFechaCreacion(today);
+        bodega.setFechaActualizacion(today);
+        bodega.setEstado(1);
         return repository.save(bodega);
     }
 
