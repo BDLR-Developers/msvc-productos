@@ -1,5 +1,7 @@
 package cl.duoc.msvc_productos.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -38,7 +40,11 @@ public class StockController {
         if (stockOptional.isPresent()) {
             return ResponseEntity.ok(stockOptional.orElseThrow());
         }
-        return ResponseEntity.notFound().build();
+        Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("error", "Solicitud inválida");
+            errorBody.put("codigo", 404);
+            errorBody.put("detalle", "No existen filas para la consulta");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
     }
 
     @PostMapping

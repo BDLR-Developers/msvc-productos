@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import cl.duoc.msvc_productos.model.Bodega;
 import cl.duoc.msvc_productos.services.BodegaService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,11 @@ public class BodegaController {
         if(bodegaOptional.isPresent()){
             return ResponseEntity.ok(bodegaOptional.orElseThrow());
         }
-        return ResponseEntity.notFound().build();
+        Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("error", "Solicitud inválida");
+            errorBody.put("codigo", 404);
+            errorBody.put("detalle", "No existe la bodega");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
     }
 
     @PostMapping
@@ -46,7 +52,11 @@ public class BodegaController {
         if(bodegaOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).body(bodegaOptional.orElseThrow());
         }
-        return ResponseEntity.notFound().build();
+        Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("error", "Solicitud inválida");
+            errorBody.put("codigo", 404);
+            errorBody.put("detalle", "No existe el id de bodega");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
     }
 
     @DeleteMapping("/{id}")
@@ -55,7 +65,11 @@ public class BodegaController {
         if (bodegaOptional.isPresent()) {
             return ResponseEntity.ok(bodegaOptional.orElseThrow());
         }
-        return ResponseEntity.notFound().build();
+        Map<String, Object> errorBody = new HashMap<>();
+            errorBody.put("error", "Solicitud inválida");
+            errorBody.put("codigo", 404);
+            errorBody.put("detalle", "No existe el id de bodega");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
     }
     
 }
