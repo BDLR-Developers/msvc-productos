@@ -17,27 +17,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msvc_productos.model.Producto;
+import cl.duoc.msvc_productos.model.excepciones.ClaseAceptado;
+import cl.duoc.msvc_productos.model.excepciones.ClaseError;
 import cl.duoc.msvc_productos.services.ProductoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 
 @RestController
 @RequestMapping("/api/v1/productos")
+@Tags({
+    @Tag(name = "Api V1 de Productos", description = "Operaciones relacionadas con los productos")
+})
 public class ProductoController {
 
     @Autowired
     private ProductoService service;
 
-    
+    @Operation(summary = "Obtener producto por ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", 
+                     description = "Producto encontrado",
+                     content = @Content(mediaType = "application/json",schema = @Schema(implementation = Producto.class))
+                    ),
+        @ApiResponse(responseCode = "404", 
+                     description = "Producto no encontrado",
+                     content = @Content(mediaType = "application/json",schema = @Schema(implementation = ClaseError.class)))
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<?> view(@PathVariable Integer id) {
+    public ResponseEntity<?> view(@Parameter(description = "Id del producto",required = true, example = "5") @PathVariable Integer id) {
         Optional<Producto> productoOptional = service.findById(id);
         if (productoOptional.isPresent()) {
             return ResponseEntity.ok(productoOptional.orElseThrow());
         }
-        Map<String, Object> errorBody = new HashMap<>();
-            errorBody.put("error", "Solicitud inválida");
-            errorBody.put("codigo", 404);
-            errorBody.put("detalle", "No se encuentra el id de producto");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(new ClaseError(404,"Solicitud inválida","No se encuentra el id de producto"));
     }
 
     @PostMapping
@@ -51,29 +70,19 @@ public class ProductoController {
         if (productoOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(productoOptional.orElseThrow());
         }
-        Map<String, Object> errorBody = new HashMap<>();
-            errorBody.put("error", "Solicitud inválida");
-            errorBody.put("codigo", 404);
-            errorBody.put("detalle", "no se encuentra el id de producto");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(new ClaseError(404,"Solicitud inválida","No se encuentra el id de producto"));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         Optional<Producto> productoOptional = service.delete(id);
         if (productoOptional.isPresent()) {
-            Map<String, Object> prodBorrar = new HashMap<>();
-            prodBorrar.put("error", "Solicitud Válida");
-            prodBorrar.put("codigo", 200);
-            prodBorrar.put("detalle", "Producto agregado con exito");
-            prodBorrar.put("Codigo", productoOptional.orElseThrow().getIdProducto());
-            prodBorrar.put("Nombre", productoOptional.orElseThrow().getNombreProducto());
-            return ResponseEntity.ok(prodBorrar);
+            return ResponseEntity.ok(new ClaseAceptado(200,"Solicitud Valida",
+            "Producto borrado con exito",productoOptional.orElseThrow().getIdProducto(),
+            productoOptional.orElseThrow().getNombreProducto()));
         }
-        Map<String, Object> errorBody = new HashMap<>();
-            errorBody.put("error", "Solicitud inválida");
-            errorBody.put("codigo", 404);
-            errorBody.put("detalle", "No se encuentra el id de producto");
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(new ClaseError(404,"Solicitud inválida","No se encuentra el id de producto"));
     }
 }
