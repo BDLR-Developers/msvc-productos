@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/v1/bodega")
+@Tag(name = "Api V1 de Bodega", description = "Operaciones relacionadas con la bodega de los productos.")
 public class BodegaController {
 
     @Autowired
