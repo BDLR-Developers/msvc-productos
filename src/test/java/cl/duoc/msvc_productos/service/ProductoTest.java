@@ -1,6 +1,8 @@
 package cl.duoc.msvc_productos.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import cl.duoc.msvc_productos.model.Producto;
@@ -68,5 +71,42 @@ public class ProductoTest {
 
     }
 
+    @Test
+    void testUpdateProducto_Existe() {
+        // Arrange
+        Integer id = 1;
+        Producto productoActualizado = new Producto();
+        productoActualizado.setNombreProducto("Nuevo Nombre");
 
+        Producto productoExistente = new Producto();
+        productoExistente.setIdProducto(id);
+        productoExistente.setNombreProducto("Freestanding Wine Rack");
+        when(repository.findById(id)).thenReturn(Optional.of(productoExistente));
+        when(repository.save(Mockito.any(Producto.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        // Act
+        Optional<Producto> resultado = service.update(id, productoActualizado);
+
+        // Assert
+        assertTrue(resultado.isPresent());
+        assertEquals("Nuevo Nombre", resultado.get().getNombreProducto());
+        assertNotNull(resultado.get().getFechaActualizacion());
+    }
+
+    @Test
+    void testUpdateProducto_NoExiste() {
+        // Arrange
+        Integer id = 999;
+        Producto producto = new Producto();
+        producto.setNombreProducto("Inexistente");
+
+        Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<Producto> resultado = service.update(id, producto);
+
+        // Assert
+        assertFalse(resultado.isPresent());
+        verify(repository, Mockito.never()).save(Mockito.any());
+    }
 }

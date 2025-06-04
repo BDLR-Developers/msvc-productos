@@ -4,8 +4,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msvc_productos.model.Bodega;
-import cl.duoc.msvc_productos.model.Producto;
-import cl.duoc.msvc_productos.model.Stock;
 import cl.duoc.msvc_productos.model.excepciones.ClaseError;
 import cl.duoc.msvc_productos.services.BodegaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,8 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
