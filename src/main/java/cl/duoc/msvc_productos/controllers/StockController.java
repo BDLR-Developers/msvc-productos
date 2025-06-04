@@ -8,13 +8,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.duoc.msvc_productos.model.Stock;
+import cl.duoc.msvc_productos.model.excepciones.ClaseAceptado;
+import cl.duoc.msvc_productos.model.excepciones.ClaseError;
 import cl.duoc.msvc_productos.model.interfaces.StockInterface;
 import cl.duoc.msvc_productos.services.StockService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
+import io.swagger.v3.oas.annotations.media.*;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,8 +118,8 @@ public class StockController {
                 @Parameter (description="Json de actualizacion del stock") @RequestBody Stock stock){
         Optional<Stock> stockOptional = service.delete(idProducto, idBodega, periodo);
         if (stockOptional.isPresent()) {
-            return ResponseEntity.ok(new ClaseAceptado(200, "Solicitud valida", "Producto ha ido borrado.",
-                                    stockOptional.orElseThrow().getIdProducto(),stockOptional.orElseThrow().getNombreProducto()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ClaseAceptado(200, "Solicitud valida", "Producto ha ido borrado.",
+                                    stockOptional.orElseThrow().getIdProducto(),""));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ClaseError(404,"Solicitud inválida", "No existen filas para la consulta."));
     }

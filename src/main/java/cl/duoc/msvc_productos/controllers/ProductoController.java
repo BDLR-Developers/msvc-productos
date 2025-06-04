@@ -78,7 +78,7 @@ public class ProductoController {
                      content = @Content(mediaType = "application/json",schema = @Schema(implementation = ClaseError.class)))
     })
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Parameter(description = "Json del producto" ,required= true, example= )@RequestBody Producto product, 
+    public ResponseEntity<?> update(@Parameter(description = "Json del producto" ,required= true)@RequestBody Producto product, 
                     @Parameter (description="Id del producto", required= true, example="7") @PathVariable Integer id) {
         Optional<Producto> productoOptional = service.update(id, product);
         if (productoOptional.isPresent()) {
