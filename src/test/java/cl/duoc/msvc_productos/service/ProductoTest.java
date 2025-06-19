@@ -73,7 +73,6 @@ public class ProductoTest {
 
     @Test
     void testUpdateProducto_Existe() {
-        // Arrange
         Integer id = 1;
         Producto productoActualizado = new Producto();
         productoActualizado.setNombreProducto("Nuevo Nombre");
@@ -84,10 +83,10 @@ public class ProductoTest {
         when(repository.findById(id)).thenReturn(Optional.of(productoExistente));
         when(repository.save(Mockito.any(Producto.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        // Act
+    
         Optional<Producto> resultado = service.update(id, productoActualizado);
 
-        // Assert
+        
         assertTrue(resultado.isPresent());
         assertEquals("Nuevo Nombre", resultado.get().getNombreProducto());
         assertNotNull(resultado.get().getFechaActualizacion());
@@ -95,17 +94,16 @@ public class ProductoTest {
 
     @Test
     void testUpdateProducto_NoExiste() {
-        // Arrange
         Integer id = 999;
         Producto producto = new Producto();
         producto.setNombreProducto("Inexistente");
 
         Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
 
-        // Act
+        
         Optional<Producto> resultado = service.update(id, producto);
 
-        // Assert
+        
         assertFalse(resultado.isPresent());
         verify(repository, Mockito.never()).save(Mockito.any());
     }

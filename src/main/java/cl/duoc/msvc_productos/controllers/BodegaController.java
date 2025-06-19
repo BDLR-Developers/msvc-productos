@@ -3,6 +3,7 @@ package cl.duoc.msvc_productos.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msvc_productos.assemblers.BodegaModelAssembler;
 import cl.duoc.msvc_productos.model.Bodega;
 import cl.duoc.msvc_productos.model.excepciones.ClaseError;
 import cl.duoc.msvc_productos.services.BodegaService;
@@ -35,6 +36,9 @@ public class BodegaController {
     @Autowired
     private BodegaService service;
 
+    @Autowired
+    private BodegaModelAssembler assembler; 
+
     @Operation(summary = "Obtener bodega por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "200", 
@@ -49,7 +53,7 @@ public class BodegaController {
     public ResponseEntity<?> consultarBodega(@PathVariable("id") Integer id) {
         Optional<Bodega> bodegaOptional = service.findById(id);
         if(bodegaOptional.isPresent()){
-            return ResponseEntity.ok(bodegaOptional.orElseThrow());
+            return ResponseEntity.ok(assembler.toModel(bodegaOptional.get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(new ClaseError(404,"Solicitud inválida","No existe la bodega"));
@@ -59,7 +63,8 @@ public class BodegaController {
     @ApiResponse(responseCode = "201", description="Ingreso valido de la informacion de la bodega")
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody Bodega bodega) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.guardar(bodega));
+        Bodega bodegaGuardada = service.guardar(bodega);
+        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(bodegaGuardada));
     }
 
     @Operation(summary = "Modificar Bodega por ID")
@@ -76,7 +81,7 @@ public class BodegaController {
     public ResponseEntity<?> actualizar(@Parameter(description = "Id de la bodega",required = true, example = "1")@PathVariable Integer id, @RequestBody Bodega bodega) {
         Optional<Bodega> bodegaOptional = service.update(id, bodega);
         if(bodegaOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.CREATED).body(bodegaOptional.orElseThrow());
+            return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(bodegaOptional.get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(new ClaseError(404, "Solicitud inválida", "No existe el id de bodega"));
@@ -96,7 +101,7 @@ public class BodegaController {
     public ResponseEntity<?> delete(@Parameter(description = "Id de la bodega",required = true, example = "1")@PathVariable Integer id) {
         Optional<Bodega> bodegaOptional = service.delete(id);
         if (bodegaOptional.isPresent()) {
-            return ResponseEntity.ok(bodegaOptional.orElseThrow());
+            return ResponseEntity.ok(assembler.toModel(bodegaOptional.get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(new ClaseError(404, "Solicitud inválida", "No existe el id de bodega"));
