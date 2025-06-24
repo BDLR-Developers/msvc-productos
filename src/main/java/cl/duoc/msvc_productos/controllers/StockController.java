@@ -2,8 +2,8 @@ package cl.duoc.msvc_productos.controllers;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +40,7 @@ public class StockController {
     @Autowired
     private StockService service;
 
-    private static final Logger logger = LoggerFactory.getLogger(StockController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(StockController.class);
 
     @Operation(summary = "Obtener consultar stock por id de producto, id de bodega y periodo.")
     @ApiResponses({

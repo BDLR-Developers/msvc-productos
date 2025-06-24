@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.msvc_productos.assemblers.ProductoModelAssembler;
 import cl.duoc.msvc_productos.model.Producto;
 import cl.duoc.msvc_productos.model.excepciones.ClaseAceptado;
 import cl.duoc.msvc_productos.model.excepciones.ClaseError;
@@ -37,6 +38,9 @@ public class ProductoController {
     @Autowired
     private ProductoService service;
 
+    @Autowired
+    private ProductoModelAssembler assembler; 
+
     @Operation(summary = "Obtener producto por ID")
     @ApiResponses({
         @ApiResponse(responseCode = "200", 
@@ -51,7 +55,7 @@ public class ProductoController {
     public ResponseEntity<?> view(@Parameter(description = "Id del producto",required = true, example = "5") @PathVariable Integer id) {
         Optional<Producto> productoOptional = service.findById(id);
         if (productoOptional.isPresent()) {
-            return ResponseEntity.ok(productoOptional.orElseThrow());
+            return ResponseEntity.ok(assembler.toModel(productoOptional.get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(new ClaseError(404,"Solicitud inválida","No se encuentra el id de producto"));
